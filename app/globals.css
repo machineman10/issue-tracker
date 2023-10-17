@@ -5,3 +5,7 @@
 .navlink {
   @apply text-zinc-500 hover:text-zinc-800 transition-colors;
 }
+
+.active {
+  @apply text-zinc-900;
+}
