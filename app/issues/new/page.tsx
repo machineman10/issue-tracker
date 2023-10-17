@@ -1,13 +1,30 @@
+"use client";
+
 import { Button, TextArea, TextFieldInput } from "@radix-ui/themes";
-import React from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+interface IssueForm {
+  title: string;
+  description: string;
+}
 
 const NewIssuePage = () => {
+  const { register, handleSubmit } = useForm<IssueForm>();
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<IssueForm> = async (data) => {
+    await axios.post("/api/issues", data);
+    router.push("/issues");
+  };
+
   return (
-    <div className="max-w-xl space-y-3">
-      <TextFieldInput placeholder="Title" />
-      <TextArea placeholder="Description" />
-      <Button>Submit new issue</Button>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl space-y-3">
+      <TextFieldInput placeholder="Title" {...register("title")} />
+      <TextArea placeholder="Description" {...register("description")} />
+      <Button type="submit">Submit new issue</Button>
+    </form>
   );
 };
 
