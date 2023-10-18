@@ -1,27 +1,22 @@
 "use client";
 
-import {
-  Button,
-  CalloutIcon,
-  CalloutRoot,
-  CalloutText,
-  TextArea,
-  TextFieldInput,
-} from "@radix-ui/themes";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { issueSchema } from "@/lib/zodValidation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Text, TextArea, TextFieldInput } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 
-interface IssueForm {
-  title: string;
-  description: string;
-}
+type IssueForm = z.infer<typeof issueSchema>;
 
 const NewIssuePage = () => {
-  const { register, handleSubmit } = useForm<IssueForm>();
-  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IssueForm>({ resolver: zodResolver(issueSchema) });
+
   const router = useRouter();
 
   const onSubmit: SubmitHandler<IssueForm> = async (data) => {
@@ -29,26 +24,31 @@ const NewIssuePage = () => {
       await axios.post("/api/issues", data);
       router.push("/issues");
     } catch (error) {
-      setError("Something went wrong!");
+      console.error(error);
     }
   };
 
   return (
-    <div className="max-w-xl space-y-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl space-y-4">
+      <div className="space-y-2">
         <TextFieldInput placeholder="Title" {...register("title")} />
+        {errors.title && (
+          <Text color="red" as="p">
+            {errors.title.message}
+          </Text>
+        )}
+      </div>
+      <div className="space-y-2">
         <TextArea placeholder="Description" {...register("description")} />
-        <Button type="submit">Submit new issue</Button>
-      </form>
-      {error && (
-        <CalloutRoot color="red">
-          <CalloutIcon>
-            <InfoCircledIcon />
-          </CalloutIcon>
-          <CalloutText>{error}</CalloutText>
-        </CalloutRoot>
-      )}
-    </div>
+        {errors.description && (
+          <Text color="red" as="p">
+            {errors.description.message}
+          </Text>
+        )}
+      </div>
+
+      <Button type="submit">Submit new issue</Button>
+    </form>
   );
 };
 
