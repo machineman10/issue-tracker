@@ -1,8 +1,9 @@
 "use client";
 
+import ErrorMessage from "@/app/components/ErrorMessage";
 import { issueSchema } from "@/lib/zodValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Text, TextArea, TextFieldInput } from "@radix-ui/themes";
+import { Button, TextArea, TextFieldInput } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -32,19 +33,11 @@ const NewIssuePage = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl space-y-4">
       <div className="space-y-2">
         <TextFieldInput placeholder="Title" {...register("title")} />
-        {errors.title && (
-          <Text color="red" as="p">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
       </div>
       <div className="space-y-2">
         <TextArea placeholder="Description" {...register("description")} />
-        {errors.description && (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
       </div>
 
       <Button type="submit">Submit new issue</Button>
