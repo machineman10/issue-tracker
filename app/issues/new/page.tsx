@@ -1,11 +1,13 @@
 "use client";
 
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
 import { issueSchema } from "@/lib/zodValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, TextArea, TextFieldInput } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -17,14 +19,17 @@ const NewIssuePage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<IssueForm>({ resolver: zodResolver(issueSchema) });
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const router = useRouter();
 
   const onSubmit: SubmitHandler<IssueForm> = async (data) => {
     try {
+      setSubmitting(true);
       await axios.post("/api/issues", data);
       router.push("/issues");
     } catch (error) {
+      setSubmitting(false);
       console.error(error);
     }
   };
@@ -40,7 +45,9 @@ const NewIssuePage = () => {
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
       </div>
 
-      <Button type="submit">Submit new issue</Button>
+      <Button type="submit" disabled={isSubmitting}>
+        Submit new issue {isSubmitting && <Spinner />}
+      </Button>
     </form>
   );
 };
