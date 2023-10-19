@@ -4,11 +4,13 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { issueSchema } from "@/lib/zodValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, TextArea, TextFieldInput } from "@radix-ui/themes";
+import { Button, TextFieldInput } from "@radix-ui/themes";
 import axios from "axios";
+import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
 
 type IssueForm = z.infer<typeof issueSchema>;
@@ -17,6 +19,7 @@ const NewIssuePage = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<IssueForm>({ resolver: zodResolver(issueSchema) });
   const [isSubmitting, setSubmitting] = useState(false);
@@ -30,7 +33,6 @@ const NewIssuePage = () => {
       router.push("/issues");
     } catch (error) {
       setSubmitting(false);
-      console.error(error);
     }
   };
 
@@ -41,7 +43,13 @@ const NewIssuePage = () => {
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
       </div>
       <div className="space-y-2">
-        <TextArea placeholder="Description" {...register("description")} />
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <SimpleMDE placeholder="Description" {...field} />
+          )}
+        />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
       </div>
 
