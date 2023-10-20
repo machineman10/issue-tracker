@@ -4,7 +4,7 @@ import { ErrorMessage, Spinner } from "@/app/components";
 import { issueSchema } from "@/lib/zodValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
-import { Button, TextFieldInput } from "@radix-ui/themes";
+import { Box, Button, TextFieldInput } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -33,8 +33,11 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   const onSubmit: SubmitHandler<IssueFormData> = async (data) => {
     try {
       setSubmitting(true);
-      await axios.post("/api/issues", data);
+      if (issue) await axios.patch(`/api/issues/${issue.id}`, data);
+      else await axios.post("/api/issues", data);
+
       router.push("/issues");
+      router.refresh();
     } catch (error) {
       setSubmitting(false);
     }
@@ -42,15 +45,15 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl space-y-4">
-      <div className="space-y-2">
+      <Box className="space-y-2">
         <TextFieldInput
           placeholder="Title"
           {...register("title")}
           defaultValue={issue?.title}
         />
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
-      </div>
-      <div className="space-y-2">
+      </Box>
+      <Box className="space-y-2">
         <Controller
           name="description"
           control={control}
@@ -60,11 +63,13 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
-      </div>
-
-      <Button type="submit" disabled={isSubmitting}>
-        Submit new issue {isSubmitting && <Spinner />}
-      </Button>
+      </Box>
+      <Box>
+        <Button disabled={isSubmitting}>
+          {issue ? "Update issue" : "Submit new issue"}{" "}
+          {isSubmitting && <Spinner />}
+        </Button>
+      </Box>
     </form>
   );
 };
