@@ -1,6 +1,7 @@
 import { IssueStatusBadge, Link } from "@/app/components";
 import prisma from "@/lib/prisma";
 import {
+  Box,
   TableBody,
   TableCell,
   TableColumnHeaderCell,
@@ -16,7 +17,7 @@ const IssuesPage = async () => {
   await delay(2000);
 
   return (
-    <>
+    <Box>
       <IssueActions />
       <TableRoot variant="surface">
         <TableHeader>
@@ -49,7 +50,7 @@ const IssuesPage = async () => {
           ))}
         </TableBody>
       </TableRoot>
-    </>
+    </Box>
   );
 };
 
