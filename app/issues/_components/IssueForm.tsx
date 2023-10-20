@@ -7,15 +7,11 @@ import { Issue } from "@prisma/client";
 import { Box, Button, TextFieldInput } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
-
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-}); //stop server side rendering for this import
 
 type IssueFormData = z.infer<typeof issueSchema>;
 

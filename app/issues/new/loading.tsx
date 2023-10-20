@@ -1,5 +1,1 @@
-const NewIssueLoadingPage = () => {
-  return <div>Loading...</div>;
-};
-
-export default NewIssueLoadingPage;
+export { default } from "../_components/IssueFormSkeleton";
