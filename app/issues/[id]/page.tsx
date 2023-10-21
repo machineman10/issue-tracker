@@ -18,7 +18,7 @@ const IssueDetailsPage = async ({
   if (!issue) notFound();
 
   return (
-    <Flex direction={{ initial: "column" }} gap="4">
+    <Flex direction={{ initial: "column" }} gap="4" className="max-w-xl">
       <Box>
         <IssueDetails issue={issue} />
       </Box>
