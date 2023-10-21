@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/app/components";
 import {
   Avatar,
   Box,
@@ -67,7 +68,7 @@ const NavLinks = () => {
 const AuthStatus = () => {
   const { status, data: session } = useSession();
 
-  if (status === "loading") return null;
+  if (status === "loading") return <Skeleton width="2.6rem" />;
 
   if (status === "unauthenticated")
     return (
