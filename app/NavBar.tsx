@@ -1,6 +1,6 @@
 "use client";
 
-import { Box } from "@radix-ui/themes";
+import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -17,33 +17,39 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="flex border-b mb-5 px-5 h-12 items-center gap-6">
-      <h1>
-        <Link href="/">
-          <AiFillBug />
-        </Link>
-      </h1>
-      <ul className="flex gap-6">
-        {links.map((link, i) => (
-          <li
-            key={i}
-            className={classNames({
-              navlink: true,
-              active: link.href === currentPath,
-            })}
-          >
-            <Link href={link.href}>{link.label}</Link>
-          </li>
-        ))}
-      </ul>
-      <Box>
-        {status === "authenticated" && (
-          <Link href="/api/auth/signout">Logout</Link>
-        )}
-        {status === "unauthenticated" && (
-          <Link href="/api/auth/signin">Login</Link>
-        )}
-      </Box>
+    <nav className="border-b mb-5 py-6">
+      <Container>
+        <Flex justify="between">
+          <Flex align="center" gap="6">
+            <Heading>
+              <Link href="/">
+                <AiFillBug />
+              </Link>
+            </Heading>
+            <ul className="flex gap-6">
+              {links.map((link, i) => (
+                <li
+                  key={i}
+                  className={classNames({
+                    navlink: true,
+                    active: link.href === currentPath,
+                  })}
+                >
+                  <Link href={link.href}>{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </Flex>
+          <Box>
+            {status === "authenticated" && (
+              <Link href="/api/auth/signout">Logout</Link>
+            )}
+            {status === "unauthenticated" && (
+              <Link href="/api/auth/signin">Login</Link>
+            )}
+          </Box>
+        </Flex>
+      </Container>
     </nav>
   );
 };
