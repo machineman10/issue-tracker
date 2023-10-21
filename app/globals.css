@@ -2,10 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-.navlink {
-  @apply text-zinc-500 hover:text-zinc-800 transition-colors;
-}
+@layer utilities {
+  .navlink {
+    @apply text-zinc-500 hover:text-zinc-800 transition-colors;
+  }
 
-.active {
-  @apply text-zinc-900;
+  .active {
+    @apply text-zinc-900;
+  }
 }
