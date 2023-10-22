@@ -11,6 +11,7 @@ import {
   SelectTrigger,
 } from "@radix-ui/themes";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "react-query";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
@@ -29,32 +30,39 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 
   if (error) return null;
 
-  const handleValueChange = (value: string) => {
-    let userId;
-    if (value === "unassigned") userId = null;
-    else userId = value;
+  const handleValueChange = async (value: string) => {
+    try {
+      let userId;
+      if (value === "unassigned") userId = null;
+      else userId = value;
 
-    axios.patch("/api/issues/" + issue.id, { userId });
+      await axios.patch("/api/issues/" + issue.id, { userId });
+    } catch (error) {
+      toast.error("Changes could not be saved.");
+    }
   };
 
   return (
-    <SelectRoot
-      onValueChange={handleValueChange}
-      defaultValue={issue.userId || "unassigned"}
-    >
-      <SelectTrigger placeholder="Assign" />
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Suggestions</SelectLabel>
-          <SelectItem value="unassigned">Unassigned</SelectItem>
-          {users?.map((user) => (
-            <SelectItem key={user.id} value={user.id}>
-              {user.name}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </SelectRoot>
+    <>
+      <SelectRoot
+        onValueChange={handleValueChange}
+        defaultValue={issue.userId || "unassigned"}
+      >
+        <SelectTrigger placeholder="Assign" />
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Suggestions</SelectLabel>
+            <SelectItem value="unassigned">Unassigned</SelectItem>
+            {users?.map((user) => (
+              <SelectItem key={user.id} value={user.id}>
+                {user.name}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </SelectRoot>
+      <Toaster />
+    </>
   );
 };
 
