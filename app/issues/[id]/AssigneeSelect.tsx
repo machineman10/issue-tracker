@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/app/components";
-import { User } from "@prisma/client";
+import { Issue, User } from "@prisma/client";
 import {
   SelectContent,
   SelectGroup,
@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useQuery } from "react-query";
 
-const AssigneeSelect = () => {
+const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const {
     data: users,
     error,
@@ -29,12 +29,24 @@ const AssigneeSelect = () => {
 
   if (error) return null;
 
+  const handleValueChange = (value: string) => {
+    let userId;
+    if (value === "unassigned") userId = null;
+    else userId = value;
+
+    axios.patch("/api/issues/" + issue.id, { userId });
+  };
+
   return (
-    <SelectRoot>
+    <SelectRoot
+      onValueChange={handleValueChange}
+      defaultValue={issue.userId || "unassigned"}
+    >
       <SelectTrigger placeholder="Assign" />
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Suggestions</SelectLabel>
+          <SelectItem value="unassigned">Unassigned</SelectItem>
           {users?.map((user) => (
             <SelectItem key={user.id} value={user.id}>
               {user.name}

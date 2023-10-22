@@ -9,7 +9,7 @@ const IssueDetails = ({ issue }: { issue: Issue }) => {
     <>
       <Flex justify="between">
         <Heading>{issue.title}</Heading>
-        <AssigneeSelect />
+        <AssigneeSelect issue={issue} />
       </Flex>
       <Flex gap="2" my="2">
         <IssueStatusBadge status={issue.status} />
