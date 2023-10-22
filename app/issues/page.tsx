@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { IssueStatusBadge, Link } from "@/app/components";
 import prisma from "@/lib/prisma";
+import { Status } from "@prisma/client";
 import {
   Box,
   TableBody,
@@ -13,8 +14,17 @@ import {
 } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 
-const IssuesPage = async () => {
-  const issues = await prisma.issue.findMany();
+interface Props {
+  searchParams: { status: Status };
+}
+
+const IssuesPage = async ({ searchParams: { status } }: Props) => {
+  const validStatuses = Object.values(Status);
+  const queryStatus = validStatuses.includes(status) ? status : undefined;
+
+  const issues = await prisma.issue.findMany({
+    where: { status: queryStatus },
+  });
 
   return (
     <Box>
