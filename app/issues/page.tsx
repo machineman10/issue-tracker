@@ -2,9 +2,11 @@ export const dynamic = "force-dynamic";
 
 import { IssueStatusBadge, Link } from "@/app/components";
 import prisma from "@/lib/prisma";
-import { Status } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 import {
   Box,
+  Flex,
   TableBody,
   TableCell,
   TableColumnHeaderCell,
@@ -12,15 +14,24 @@ import {
   TableRoot,
   TableRow,
 } from "@radix-ui/themes";
+import NextLink from "next/link";
 import IssueActions from "./IssueActions";
 
 interface Props {
-  searchParams: { status: Status };
+  searchParams: { status: Status; orderBy: keyof Issue };
 }
 
-const IssuesPage = async ({ searchParams: { status } }: Props) => {
+const columns: { label: string; value: keyof Issue; className?: string }[] = [
+  { label: "Title", value: "title" },
+  { label: "Status", value: "status", className: "hidden md:table-cell" },
+  { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+];
+
+const IssuesPage = async ({ searchParams }: Props) => {
   const validStatuses = Object.values(Status);
-  const queryStatus = validStatuses.includes(status) ? status : undefined;
+  const queryStatus = validStatuses.includes(searchParams.status)
+    ? searchParams.status
+    : undefined;
 
   const issues = await prisma.issue.findMany({
     where: { status: queryStatus },
@@ -32,13 +43,26 @@ const IssuesPage = async ({ searchParams: { status } }: Props) => {
       <TableRoot variant="surface">
         <TableHeader>
           <TableRow>
-            <TableColumnHeaderCell>Title</TableColumnHeaderCell>
-            <TableColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </TableColumnHeaderCell>
-            <TableColumnHeaderCell className="hidden md:table-cell">
-              CreatedAt
-            </TableColumnHeaderCell>
+            {columns.map((column) => (
+              <TableColumnHeaderCell
+                key={column.value}
+                className={column.className || ""}
+              >
+                <NextLink
+                  href={{
+                    query: {
+                      ...searchParams,
+                      orderBy: column.value,
+                    },
+                  }}
+                >
+                  <Flex align="center">
+                    {column.label}
+                    {column.value === searchParams.orderBy && <ArrowUpIcon />}
+                  </Flex>
+                </NextLink>
+              </TableColumnHeaderCell>
+            ))}
           </TableRow>
         </TableHeader>
         <TableBody>
