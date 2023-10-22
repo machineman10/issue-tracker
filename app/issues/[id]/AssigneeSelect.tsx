@@ -1,4 +1,7 @@
-import prisma from "@/lib/prisma";
+"use client";
+
+import { Skeleton } from "@/app/components";
+import { User } from "@prisma/client";
 import {
   SelectContent,
   SelectGroup,
@@ -7,9 +10,24 @@ import {
   SelectRoot,
   SelectTrigger,
 } from "@radix-ui/themes";
+import axios from "axios";
+import { useQuery } from "react-query";
 
-const AssigneeSelect = async () => {
-  const users = await prisma.user.findMany({ orderBy: { name: "asc" } });
+const AssigneeSelect = () => {
+  const {
+    data: users,
+    error,
+    isLoading,
+  } = useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => axios.get("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000,
+    retry: 3,
+  });
+
+  if (isLoading) return <Skeleton width="5rem" height="2rem" />;
+
+  if (error) return null;
 
   return (
     <SelectRoot>
@@ -17,7 +35,7 @@ const AssigneeSelect = async () => {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Suggestions</SelectLabel>
-          {users.map((user) => (
+          {users?.map((user) => (
             <SelectItem key={user.id} value={user.id}>
               {user.name}
             </SelectItem>

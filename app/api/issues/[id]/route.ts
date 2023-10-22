@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
-import { issueSchema } from "@/lib/zodValidation";
+import { patchIssueSchema } from "@/lib/zodValidation";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,25 +12,34 @@ export async function PATCH(
   if (!session) return NextResponse.json({}, { status: 401 });
 
   const body = await req.json();
-  const validateBody = issueSchema.safeParse(body);
+  const { title, description, userId } = body;
+
+  const validateBody = patchIssueSchema.safeParse(body);
 
   if (!validateBody.success)
     return NextResponse.json(validateBody.error.format(), { status: 400 });
+
+  if (userId) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user)
+      return NextResponse.json({ error: "Invalid user!" }, { status: 400 });
+  }
 
   const issue = await prisma.issue.findUnique({ where: { id: +params.id } });
 
   if (!issue)
     return NextResponse.json({ error: "Invalid issue!" }, { status: 404 });
 
-  await prisma.issue.update({
+  const updatedIssue = await prisma.issue.update({
     where: { id: +params.id },
     data: {
-      title: body.title,
-      description: body.description,
+      title,
+      description,
+      userId,
     },
   });
 
-  return NextResponse.json({});
+  return NextResponse.json(updatedIssue);
 }
 
 export async function DELETE(
