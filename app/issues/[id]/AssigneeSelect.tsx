@@ -11,6 +11,7 @@ import {
   SelectTrigger,
 } from "@radix-ui/themes";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "react-query";
 
@@ -26,6 +27,8 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     retry: 3,
   });
 
+  const router = useRouter();
+
   if (isLoading) return <Skeleton width="5rem" height="2rem" />;
 
   if (error) return null;
@@ -37,6 +40,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       else userId = value;
 
       await axios.patch("/api/issues/" + issue.id, { userId });
+      router.refresh();
     } catch (error) {
       toast.error("Changes could not be saved.");
     }
