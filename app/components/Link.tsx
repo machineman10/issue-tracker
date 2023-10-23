@@ -5,12 +5,13 @@ import { ReactNode } from "react";
 interface Props {
   href: string;
   children: ReactNode;
+  className?: string;
 }
 
-const Link = ({ href, children }: Props) => {
+const Link = ({ href, children, className }: Props) => {
   return (
     <NextLink href={href} passHref legacyBehavior>
-      <RadixLink>{children}</RadixLink>
+      <RadixLink className={className}>{children}</RadixLink>
     </NextLink>
   );
 };
