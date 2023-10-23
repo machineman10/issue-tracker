@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import { IssueStatusBadge, Link } from "@/app/components";
+import { IssueStatusBadge, Link, Pagination } from "@/app/components";
 import prisma from "@/lib/prisma";
 import { Issue, Status } from "@prisma/client";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
@@ -18,7 +18,7 @@ import NextLink from "next/link";
 import IssueActions from "./IssueActions";
 
 interface Props {
-  searchParams: { status: Status; orderBy: keyof Issue };
+  searchParams: { status: Status; orderBy: keyof Issue; page: string };
 }
 
 const columns: { label: string; value: keyof Issue; className?: string }[] = [
@@ -39,9 +39,18 @@ const IssuesPage = async ({ searchParams }: Props) => {
     ? { [searchParams.orderBy]: "asc" }
     : undefined;
 
+  const currentPage = +searchParams.page || 1;
+  const issuePerPage = 10;
+
   const issues = await prisma.issue.findMany({
     where: { status: queryStatus },
     orderBy,
+    skip: (currentPage - 1) * issuePerPage,
+    take: issuePerPage,
+  });
+
+  const totalIssues = await prisma.issue.count({
+    where: { status: queryStatus },
   });
 
   return (
@@ -91,6 +100,13 @@ const IssuesPage = async ({ searchParams }: Props) => {
           ))}
         </TableBody>
       </TableRoot>
+      <Flex mt="5">
+        <Pagination
+          totalItem={totalIssues}
+          itemPerPage={issuePerPage}
+          currentPage={currentPage}
+        />
+      </Flex>
     </Box>
   );
 };
