@@ -47,7 +47,7 @@ const Pagination = ({ totalItem, itemPerPage, currentPage }: Props) => {
         <ChevronLeftIcon />
       </Button>
 
-      <Text ml="8" mr="8">
+      <Text ml="8" mr="8" size={{ initial: "2", md: "3" }}>
         Page {currentPage} of {totalPage}
       </Text>
 
