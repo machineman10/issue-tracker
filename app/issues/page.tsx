@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import { Pagination } from "@/app/components";
 import prisma from "@/lib/prisma";
 import { Issue, Status } from "@prisma/client";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Text } from "@radix-ui/themes";
 import { Metadata } from "next";
 import IssueActions from "./IssueActions";
 import IssueTable, { columnsValueArr } from "./IssueTable";
@@ -48,15 +48,25 @@ const IssuesPage = async ({ searchParams }: Props) => {
   });
 
   return (
-    <Flex direction="column" gap="4">
-      <IssueActions />
-      <IssueTable searchParams={searchParams} issues={issues} />
-      <Pagination
-        totalItem={totalIssues}
-        itemPerPage={issuePerPage}
-        currentPage={currentPage}
-      />
-    </Flex>
+    <>
+      {issues.length === 0 && (
+        <Flex direction="column" align="center" gap="4">
+          <Text className="block text-xl font-semibold">No issues found.</Text>
+          <IssueActions init />
+        </Flex>
+      )}
+      {issues.length > 0 && (
+        <Flex direction="column" gap="4">
+          <IssueActions />
+          <IssueTable searchParams={searchParams} issues={issues} />
+          <Pagination
+            totalItem={totalIssues}
+            itemPerPage={issuePerPage}
+            currentPage={currentPage}
+          />
+        </Flex>
+      )}
+    </>
   );
 };
 

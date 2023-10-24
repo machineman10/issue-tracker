@@ -12,6 +12,7 @@ import {
   AlertDialogTrigger,
   Button,
   Flex,
+  Text,
 } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -39,7 +40,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
         <AlertDialogTrigger>
           <Button color="red" disabled={isDeleting}>
             <TrashIcon />
-            <p>Delete issue</p>
+            <Text>Delete issue</Text>
             {isDeleting && <Spinner />}
           </Button>
         </AlertDialogTrigger>
