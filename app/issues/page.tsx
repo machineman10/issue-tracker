@@ -4,8 +4,14 @@ import { Pagination } from "@/app/components";
 import prisma from "@/lib/prisma";
 import { Issue, Status } from "@prisma/client";
 import { Flex } from "@radix-ui/themes";
+import { Metadata } from "next";
 import IssueActions from "./IssueActions";
 import IssueTable, { columnsValueArr } from "./IssueTable";
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Issues",
+  description: "View all the project issues",
+};
 
 export interface IssueQuery {
   status: Status;

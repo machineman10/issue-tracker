@@ -1,11 +1,25 @@
 import { authOptions } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
 import { Box, Flex } from "@radix-ui/themes";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import DeleteIssueButton from "./DeleteIssueButton";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const issue = await prisma.issue.findUnique({ where: { id: +params.id } });
+
+  return {
+    title: issue?.title,
+    description: `Details of the issue ${issue?.id}`,
+  };
+}
 
 const IssueDetailsPage = async ({
   params: { id },
