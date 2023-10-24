@@ -51,7 +51,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
     <>
       {issues.length === 0 && (
         <Flex direction="column" align="center" gap="4">
-          <Text className="block text-xl font-semibold">No issues found.</Text>
+          <Text className="block text-xl font-semibold">No issues found</Text>
           <IssueActions init />
         </Flex>
       )}

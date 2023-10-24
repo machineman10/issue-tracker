@@ -25,13 +25,13 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid user!" }, { status: 400 });
   }
 
-  const issue = await prisma.issue.findUnique({ where: { id: +params.id } });
+  const issue = await prisma.issue.findUnique({ where: { id: params.id } });
 
   if (!issue)
     return NextResponse.json({ error: "Invalid issue!" }, { status: 404 });
 
   const updatedIssue = await prisma.issue.update({
-    where: { id: +params.id },
+    where: { id: params.id },
     data: {
       title,
       description,
@@ -49,13 +49,13 @@ export async function DELETE(
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({}, { status: 401 });
 
-  const issue = await prisma.issue.findUnique({ where: { id: +params.id } });
+  const issue = await prisma.issue.findUnique({ where: { id: params.id } });
 
   if (!issue)
     return NextResponse.json({ error: "Invalid issue!" }, { status: 404 });
 
   await prisma.issue.delete({
-    where: { id: +params.id },
+    where: { id: params.id },
   });
 
   return NextResponse.json({});

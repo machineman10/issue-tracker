@@ -9,7 +9,7 @@ import DeleteIssueButton from "./DeleteIssueButton";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
 
-const fetchIssue = cache((issueId: number) =>
+const fetchIssue = cache((issueId: string) =>
   prisma.issue.findUnique({ where: { id: issueId } })
 );
 
@@ -18,7 +18,7 @@ export async function generateMetadata({
 }: {
   params: { id: string };
 }): Promise<Metadata> {
-  const issue = await fetchIssue(+params.id);
+  const issue = await fetchIssue(params.id);
 
   return {
     title: issue?.title,
@@ -32,7 +32,7 @@ const IssueDetailsPage = async ({
   params: { id: string };
 }) => {
   const session = await getServerSession(authOptions);
-  const issue = await fetchIssue(+id);
+  const issue = await fetchIssue(id);
 
   if (!issue) notFound();
 
