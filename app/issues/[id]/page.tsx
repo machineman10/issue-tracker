@@ -4,16 +4,21 @@ import { Box, Flex } from "@radix-ui/themes";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import DeleteIssueButton from "./DeleteIssueButton";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
+
+const fetchIssue = cache((issueId: number) =>
+  prisma.issue.findUnique({ where: { id: issueId } })
+);
 
 export async function generateMetadata({
   params,
 }: {
   params: { id: string };
 }): Promise<Metadata> {
-  const issue = await prisma.issue.findUnique({ where: { id: +params.id } });
+  const issue = await fetchIssue(+params.id);
 
   return {
     title: issue?.title,
@@ -27,7 +32,7 @@ const IssueDetailsPage = async ({
   params: { id: string };
 }) => {
   const session = await getServerSession(authOptions);
-  const issue = await prisma.issue.findUnique({ where: { id: +id } });
+  const issue = await fetchIssue(+id);
 
   if (!issue) notFound();
 
