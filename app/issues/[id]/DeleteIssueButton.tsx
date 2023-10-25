@@ -41,6 +41,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
           <Button
             color="red"
             style={{ backgroundColor: "var(--accent-11)" }}
+            className="cursor-pointer"
             disabled={isDeleting}
           >
             <TrashIcon />
