@@ -1,9 +1,9 @@
 import { Box, Text } from "@radix-ui/themes";
 
-const Spinner = ({ h, w }: { h: string; w: string }) => {
+const Spinner = () => {
   return (
     <Box
-      className={`inline-block h-${h} w-${w} animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]`}
+      className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
       style={{ color: "var(--accent-12)" }}
       role="status"
     >

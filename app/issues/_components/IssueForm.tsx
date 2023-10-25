@@ -63,7 +63,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
       <Box>
         <Button className="cursor-pointer" disabled={isSubmitting}>
           {issue ? "Update issue" : "Submit new issue"}{" "}
-          {isSubmitting && <Spinner h="4" w="4" />}
+          {isSubmitting && <Spinner />}
         </Button>
       </Box>
     </form>

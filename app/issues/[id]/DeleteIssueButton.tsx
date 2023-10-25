@@ -46,7 +46,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
           >
             <TrashIcon />
             <Text>Delete issue</Text>
-            {isDeleting && <Spinner h="4" w="4" />}
+            {isDeleting && <Spinner />}
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
