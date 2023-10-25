@@ -60,6 +60,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
                 variant="soft"
                 color="gray"
                 style={{ backgroundColor: "var(--accent-a3)" }}
+                className="cursor-pointer"
               >
                 Cancel
               </Button>
@@ -69,6 +70,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
                 color="red"
                 style={{ backgroundColor: "var(--accent-11)" }}
                 variant="solid"
+                className="cursor-pointer"
                 onClick={deleteHandler}
               >
                 Delete
@@ -89,6 +91,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
                 variant="soft"
                 color="gray"
                 style={{ backgroundColor: "var(--accent-a3)" }}
+                className="cursor-pointer"
                 onClick={() => setError(false)}
               >
                 Ok
