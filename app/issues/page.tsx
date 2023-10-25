@@ -48,16 +48,10 @@ const IssuesPage = async ({ searchParams }: Props) => {
   });
 
   return (
-    <>
-      {issues.length === 0 && (
-        <Flex direction="column" align="center" gap="4">
-          <Text className="block text-xl font-semibold">No issues found</Text>
-          <IssueActions init />
-        </Flex>
-      )}
-      {issues.length > 0 && (
+    <Flex direction="column" gap="4">
+      <IssueActions />
+      {issues.length > 0 ? (
         <Flex direction="column" gap="4">
-          <IssueActions />
           <IssueTable searchParams={searchParams} issues={issues} />
           <Pagination
             totalItem={totalIssues}
@@ -65,8 +59,12 @@ const IssuesPage = async ({ searchParams }: Props) => {
             currentPage={currentPage}
           />
         </Flex>
+      ) : (
+        <Text align="center" className="pt-12 block text-xl font-semibold">
+          No issues found
+        </Text>
       )}
-    </>
+    </Flex>
   );
 };
 

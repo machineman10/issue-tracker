@@ -57,7 +57,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
               </Button>
             </AlertDialogCancel>
             <AlertDialogAction>
-              <Button variant="solid" color="red" onClick={deleteHandler}>
+              <Button variant="solid" color="teal" onClick={deleteHandler}>
                 Delete
               </Button>
             </AlertDialogAction>

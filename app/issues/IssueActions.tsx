@@ -2,10 +2,10 @@ import { Button, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import IssueStatusFilter from "./IssueStatusFilter";
 
-const IssueActions = ({ init }: { init?: boolean }) => {
+const IssueActions = () => {
   return (
     <Flex justify="between">
-      {!init && <IssueStatusFilter />}
+      <IssueStatusFilter />
       <Button>
         <Link href="/issues/new">New issue</Link>
       </Button>
