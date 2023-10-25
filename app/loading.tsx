@@ -4,7 +4,7 @@ import { Spinner } from "./components";
 const loading = () => {
   return (
     <Flex justify="center">
-      <Spinner />
+      <Spinner h="6" w="6" />
     </Flex>
   );
 };
